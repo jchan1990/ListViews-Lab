@@ -1,11 +1,13 @@
 package ly.generalassemb.drewmahrt.bookshelf;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -20,16 +22,19 @@ public class MainActivity extends AppCompatActivity {
     BaseAdapter mBookAdapter;
 
     //TODO: Define your ListView
-
+    ListView listView;
     //TODO: Define your Book List
+    ArrayList<Book> mBookList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        listView = (ListView) findViewById(R.id.llistView);
+
         //Use helper method to add books to the list
-        mBookList = generateBooks();
+        mBookList = (ArrayList<Book>) generateBooks();
 
         //TODO: Instantiate BaseAdapter
         //Below is a partially complete example for one Adapter
@@ -52,23 +57,50 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 //TODO: Update the view
+                View view = convertView;
+
+                if (view == null) {
+                    LayoutInflater inflator = (LayoutInflater) MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    view = inflator.inflate(android.R.layout.simple_list_item_2, null);
+                }
+                TextView textView1 = (TextView) view.findViewById(android.R.id.text1);
+                TextView textView2 = (TextView) view.findViewById(android.R.id.text2);
+
+                String text1 = "Title: " + mBookList.get(position).getTitle();
+                String text2 = "Title: " + mBookList.get(position).getTitle();
+                textView1.setText(text1);
+                textView2.setText(text2);
+
+                return view;
             }
         };
 
         //TODO: Set the ListView's adapter
+        listView.setAdapter(mBookAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                TextView textView1 = (TextView) view.findViewById(android.R.id.text1);
+                TextView textView2 = (TextView) view.findViewById(android.R.id.text2);
+
+                textView1.setTextColor(Color.parseColor("#FF0000"));
+                textView2.setTextColor(Color.parseColor("#FF0000"));
+            }
+        });
 
     }
 
     //Method to generate a list of Books
-    private List<Book> generateBooks(){
+    private List<Book> generateBooks() {
         List<Book> books = new ArrayList<>();
 
-        books.add(new Book("Apples Book","Brad"));
-        books.add(new Book("Cats Book","Ryan"));
-        books.add(new Book("Eagles Book","Kate"));
-        books.add(new Book("Strawberries Cathy","Brad"));
-        books.add(new Book("Dogs Book","Tom"));
-        books.add(new Book("Ants Book","Zane"));
+        books.add(new Book("Apples Book", "Brad"));
+        books.add(new Book("Cats Book", "Ryan"));
+        books.add(new Book("Eagles Book", "Kate"));
+        books.add(new Book("Strawberries Cathy", "Brad"));
+        books.add(new Book("Dogs Book", "Tom"));
+        books.add(new Book("Ants Book", "Zane"));
 
         return books;
     }
